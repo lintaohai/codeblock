@@ -1,0 +1,5 @@
+Object.prototype.toString.call(1) === '[object Number]'
+Object.prototype.toString.call([]) === '[object Array]'
+Object.prototype.toString.call({}) === '[object Object]'
+Object.prototype.toString.call('') === '[object String]'
+Object.prototype.toString.call(Function) === '[object Function]'
