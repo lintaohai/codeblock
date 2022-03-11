@@ -7,29 +7,26 @@ let arr = [
     {id: 6, name: '部门5', pid: 3},
 ]
 
-let tree = []
-
-arr.forEach(item => {
-    if (item.id != 1) {
-        item.pid && queryTree(tree, item)
-    } else {
-        tree.push(item)
+function formatTree(data){
+    const result = []
+    const arrMap = []
+    for(const a of data) {
+        arrMap[a.id] = {...a, children: []}
     }
-})
-function queryTree(treeData, source){
-    treeData.map(item => {
-        if (item.id === source.pid) {
-            if (!item.children) {
-                item.children = [source]
-            } else {
-                item.children.push(source)
-            }
+    data.map(item => {
+        if (item.pid === 0) {
+            result.push(arrMap[item.id])
         } else {
-            item.children && item.children.length > 0 && queryTree(item.children, source)
+            if (arrMap[item.pid]) {
+                arrMap[item.pid].children.push(arrMap[item.id])
+            }
         }
     })
+
+    return result
 }
-console.table(tree)
+const a = formatTree(arr)
+console.table(a);
 
 
 let treedata = [
@@ -47,18 +44,19 @@ let treedata = [
         ]
     },
 ]
-const format = []
-function xx(data) {
-    data && data.map(item => {
-        if (item.children && item.children.length > 0) {
-            xx(item.children)
-            item.children = null
-            format.push(item)
-        } else {
-            item.children = null
-            format.push(item)
+
+function formatArr(arr){
+    const result = []
+    // arr.map(item => loop(item))
+    loop(arr[0])
+    function loop(aItem){
+        const {id, name, pid} = aItem
+        result.push({id, name, pid, children: []})
+        if (aItem.children) {
+            aItem.children.map(cItem => loop(cItem))
         }
-    })
+    }
+    
+    return result
 }
-xx(treedata)
-console.table(format)
+console.log(JSON.stringify(formatArr(arr), null ,2))
